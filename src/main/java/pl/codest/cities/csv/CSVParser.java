@@ -1,16 +1,14 @@
-package pl.codest.cities.service;
+package pl.codest.cities.csv;
 
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Service;
 import pl.codest.cities.model.City;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-class CSVService {
+public class CSVParser {
 
     public static List<City> csvToCities(String pathName) {
         try {
@@ -22,9 +20,9 @@ class CSVService {
         }
     }
 
-        private static List<City> readStreamToCities(InputStream is) throws IOException {
+    private static List<City> readStreamToCities(InputStream is) throws IOException {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-             CSVParser csvParser = new CSVParser(fileReader,
+             org.apache.commons.csv.CSVParser csvParser = new org.apache.commons.csv.CSVParser(fileReader,
                      CSVFormat.DEFAULT
                              .withFirstRecordAsHeader()
                              .withIgnoreHeaderCase()
@@ -32,7 +30,7 @@ class CSVService {
             return csvParser
                     .getRecords()
                     .stream()
-                    .map(CSVService::mapCSVRecordToCity)
+                    .map(CSVParser::mapCSVRecordToCity)
                     .toList();
         }
     }
