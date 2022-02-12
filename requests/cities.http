@@ -1,0 +1,19 @@
+### Get first 10 cities
+GET http://localhost:8080/cities
+
+### Get 5 cities from 6th page
+GET http://localhost:8080/cities?page=6&size=5
+
+### Get first 20 cities with City in name
+GET http://localhost:8080/cities?size=20&name=City
+
+### Update Tokyo (first city) name and url
+PATCH http://localhost:8080/cities/1
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "name":"TOKYO",
+  "url":"http://tokyo.jp"
+}
+

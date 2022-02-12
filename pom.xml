@@ -20,12 +20,14 @@
 		<spring-test.version>5.3.3</spring-test.version>
 		<hamcrest-library.version>2.2</hamcrest-library.version>
 		<json-path.version>2.5.0</json-path.version>
+		<commons-lang3.version>3.12.0</commons-lang3.version>
+		<hibernate-validator.version>6.0.10.Final</hibernate-validator.version>
 	</properties>
 	<dependencies>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -50,9 +52,24 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
 			<version>${commons-csv.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
 		</dependency>
 	</dependencies>
 

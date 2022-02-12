@@ -7,18 +7,27 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 import pl.codest.cities.repository.CityRepository;
+import pl.codest.cities.service.CityService;
 
-@SpringBootTest
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @ExtendWith(SpringExtension.class)
 public abstract class IntegrationTestContext {
 
-	@Autowired
 	protected MockMvc mockMvc;
 
 	@Autowired
+	protected WebApplicationContext context;
+
+	@Autowired
 	protected CityRepository cityRepository;
+
+	@Autowired
+	protected CityService cityService;
 }
 

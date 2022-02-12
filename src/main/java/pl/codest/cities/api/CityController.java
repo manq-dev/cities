@@ -1,29 +1,66 @@
 package pl.codest.cities.api;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pl.codest.cities.api.UpdateCityValidator.UpdateCityValidation;
 import pl.codest.cities.model.City;
 import pl.codest.cities.service.CityService;
+import pl.codest.cities.service.CityService.UpdateCityCommand;
 
+import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 import static pl.codest.cities.api.CityController.CITIES_MAPPING;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping( CITIES_MAPPING)
-class CityController {
+public class CityController {
 
-    private final CityService cityService;
     static final String CITIES_MAPPING = "/cities";
+    private final CityService cityService;
+
+    private static final String DEFAULT_LIST_SIZE = "10";
+    private static final String DEFAULT_PAGE_NUMBER = "0";
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public Page<City> findAllCities(
-            @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false ,defaultValue = "10") Integer size) {
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) @PositiveOrZero Integer page,
+            @RequestParam(required = false ,defaultValue = DEFAULT_LIST_SIZE) @PositiveOrZero Integer size) {
+        if(StringUtils.isNotBlank(name)) {
+            return cityService.findByName(name, page, size);
+        }
         return cityService.findAll(page, size);
     }
 
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateCity(
+            @PathVariable @PositiveOrZero Integer id,
+            @RequestBody @Valid UpdateCityRequest command) {
+        UpdateCityResponse response = cityService.updateCity(command.toUpdateCommand(id));
+        if (!response.success()) {
+            String message = String.join(", ", response.errors());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
+    @UpdateCityValidation
+    record UpdateCityRequest(String name, String imageUrl) {
+        UpdateCityCommand toUpdateCommand(int id) {
+            return new UpdateCityCommand(id, name, imageUrl);
+        }
+    }
+
+    public record UpdateCityResponse(boolean success, List<String> errors) {
+        public static UpdateCityResponse SUCCESS = new UpdateCityResponse(true, emptyList());
+    }
 }
