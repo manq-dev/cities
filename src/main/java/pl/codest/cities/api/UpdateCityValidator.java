@@ -25,22 +25,14 @@ public class UpdateCityValidator implements ConstraintValidator<UpdateCityValida
         if (object == null) {
             throw new NullPointerException("UpdateCityRequest cannot be null.");
         }
-        if (StringUtils.isAllBlank(object.name(), object.imageUrl())) {
-            context.disableDefaultConstraintViolation();
-            context
-                    .buildConstraintViolationWithTemplate("One of two fields in request should be specified.")
-                    .addConstraintViolation();
-            return false;
-        } else {
-            return true;
-        }
+        return !StringUtils.isAnyBlank(object.name(), object.imageUrl());
     }
 
     @Constraint(validatedBy = UpdateCityValidator.class)
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface UpdateCityValidation {
-        String message() default "error.city.update";
+        String message() default "";
         Class<?>[] groups() default { };
         Class<? extends Payload>[] payload() default {};
     }

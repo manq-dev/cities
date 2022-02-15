@@ -8,23 +8,23 @@
 ### Backlog
 
 #### Backend
-- [ ] browse through the paginated list GET /cities?page={page}&size={size}
-- [ ] search by name GET /cities?name={name}
-- [ ] edit the city PATCH /cities/{id}
-- [ ] init list of cities from cities.csv file
-- [ ] Spring Boot
-- [ ] Maven
-- [ ] H2 Database
-- [ ] Spring Security ROLE_ALLOW_EDIT
-- [ ] GitHub
-- [ ] run it with little-to-zero effort
-- [ ] validation
-- [ ] validation tests
+- DONE browse through the paginated list GET /cities?page={page}&size={size}
+- DONE search by name GET /cities?name={name}
+- DONE edit the city PATCH /cities/{id}
+- DONE init list of cities from cities.csv file 
+- DONE Spring Boot
+- DONE Maven
+- DONE H2 Database 
+- DONE Spring Security ROLE_ALLOW_EDIT 
+- DONE GitHub
+- DONE validation
+- DONE validation tests
+- run it with little-to-zero effort
 
 #### Frontend
-- [ ] Angular
-- [ ] browse through the paginated list of cities with the corresponding photos
-- [ ] search by name
-- [ ] edit the city
-- [ ] run it with little-to-zero effort
-- [ ] validation
+- DONE Angular 
+- DONE browse through the paginated list of cities with the corresponding photos 
+- DONE search by name
+- authorization
+- edit the city
+- run it with little-to-zero effort

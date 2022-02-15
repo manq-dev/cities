@@ -26,6 +26,15 @@
       [responsive]="true"
       (pageChange)="handlePageChange($event)"
     ></pagination-controls>
+    <div class="mt-3">
+
+      Cities per page:
+      <select (change)="handlePageSizeChange($event)">
+        <option *ngFor="let size of pageSizes" [ngValue]="size">
+          {{ size }}
+        </option>
+      </select>
+    </div>
   </div>
 
   <div class="col-md-6">
@@ -36,7 +45,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
-        <th scope="col">Email</th>
+        <th scope="col">Image url</th>
       </tr>
       </thead>
       <tbody>
@@ -51,43 +60,52 @@
       >
         <td>{{ city.id }}</td>
         <td>{{ city.name }}</td>
-        <td><a href="{{ city.imageUrl }}">{{ city.name }} image url</a></td>
+        <td><a href="{{ city.imageUrl }}">{{ shortImageUrl(city.imageUrl!) }} </a></td>
       </tr>
       </tbody>
     </table>
   </div>
   <div class="col-md-6">
-    <div *ngIf="currentCity.id">
-      <h4>City</h4>
-      <div>
-        <label><strong>Name:</strong></label> {{ currentCity.name }}
-      </div>
-      <div>
-        <label><strong>Image url:</strong></label>
-        {{ currentCity.imageUrl }}
+      <div *ngIf="currentCity.id" class="edit-form">
+        <h4>City</h4>
+        <form>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              [(ngModel)]="currentCity.name"
+              name="name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image url</label>
+            <input
+              type="text"
+              class="form-control"
+              id="imageUrl"
+              [(ngModel)]="currentCity.imageUrl"
+              name="imageUrl"
+            />
+          </div>
+        </form>
+
+        <button
+          type="submit"
+          class="badge badge-success mb-2"
+          (click)="updateCity()"
+        >
+          Update
+        </button>
+        <p>{{ message }}</p>
+        <img src="{{ currentCity.imageUrl }}" alt="{{ currentCity.name}} image">
       </div>
 
-<!--      <a-->
-<!--        class="badge badge-warning"-->
-<!--        routerLink="/cities/{{ city.id }}"-->
-<!--      >-->
-<!--        Edit-->
-<!--      </a>-->
-    </div>
-
-    <div *ngIf="!currentCity">
-      <br />
-      <p>Please click on a City...</p>
-    </div>
+      <div *ngIf="!currentCity.id">
+        <br />
+        <p>Please select City</p>
+      </div>
   </div>
 
-  <div class="mt-3">
-
-    Cities per page:
-    <select (change)="handlePageSizeChange($event)">
-      <option *ngFor="let size of pageSizes" [ngValue]="size">
-        {{ size }}
-      </option>
-    </select>
-  </div>
 </div>

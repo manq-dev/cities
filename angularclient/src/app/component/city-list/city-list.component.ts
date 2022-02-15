@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {City} from 'src/app/model/city';
 import {CityService} from 'src/app/service/city.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-city-list',
@@ -13,13 +14,16 @@ export class CityListComponent implements OnInit {
   currentCity: City = {};
   currentIndex = -1;
   name = '';
+  message = '';
 
   page = 1;
   count = 0;
   pageSize = 5;
   pageSizes = [5, 10, 20, 50, 100];
 
-  constructor(private cityService: CityService) { }
+  constructor(private cityService: CityService,
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.getCities();
@@ -84,5 +88,23 @@ export class CityListComponent implements OnInit {
   searchName(): void {
     this.page = 1;
     this.getCities();
+  }
+
+  updateCity(): void {
+    this.message = '';
+
+    this.cityService.update(this.currentCity.id, this.currentCity)
+      .subscribe(
+        response => {
+          console.log(response);
+          this.message = response.message ? response.message : 'This city was updated successfully!';
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+  shortImageUrl(imageUrl: string): string {
+    return imageUrl.substring(0,15) + "..." + imageUrl.slice(-30);
   }
 }
