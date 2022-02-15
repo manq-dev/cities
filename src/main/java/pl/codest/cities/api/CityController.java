@@ -21,6 +21,7 @@ import static pl.codest.cities.api.CityController.CITIES_MAPPING;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping( CITIES_MAPPING)
+@CrossOrigin(origins = "http://localhost:4200")
 public class CityController {
 
     static final String CITIES_MAPPING = "/cities";

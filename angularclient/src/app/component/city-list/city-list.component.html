@@ -1,0 +1,93 @@
+<div class="list row">
+  <div class="col-md-8">
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by city name"
+        [(ngModel)]="name"
+      />
+      <div class="input-group-append">
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          (click)="searchName()"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <pagination-controls
+      previousLabel="Prev"
+      nextLabel="Next"
+      [responsive]="true"
+      (pageChange)="handlePageChange($event)"
+    ></pagination-controls>
+  </div>
+
+  <div class="col-md-6">
+    <h4>City list</h4>
+
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let city of cities | paginate : {
+                  itemsPerPage: pageSize,
+                  currentPage: page,
+                  totalItems: count
+                };
+          let i = index"
+          [class.active]="i == currentIndex"
+          (click)="setActiveCity(city, i)"
+      >
+        <td>{{ city.id }}</td>
+        <td>{{ city.name }}</td>
+        <td><a href="{{ city.imageUrl }}">{{ city.name }} image url</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6">
+    <div *ngIf="currentCity.id">
+      <h4>City</h4>
+      <div>
+        <label><strong>Name:</strong></label> {{ currentCity.name }}
+      </div>
+      <div>
+        <label><strong>Image url:</strong></label>
+        {{ currentCity.imageUrl }}
+      </div>
+
+<!--      <a-->
+<!--        class="badge badge-warning"-->
+<!--        routerLink="/cities/{{ city.id }}"-->
+<!--      >-->
+<!--        Edit-->
+<!--      </a>-->
+    </div>
+
+    <div *ngIf="!currentCity">
+      <br />
+      <p>Please click on a City...</p>
+    </div>
+  </div>
+
+  <div class="mt-3">
+
+    Cities per page:
+    <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
+  </div>
+</div>

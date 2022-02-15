@@ -1,0 +1,41 @@
+<div>
+  <div *ngIf="currentCity.id" class="edit-form">
+    <h4>City</h4>
+    <form>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          [(ngModel)]="currentCity.name"
+          name="name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="imageUrl">Image url</label>
+        <input
+          type="text"
+          class="form-control"
+          id="imageUrl"
+          [(ngModel)]="currentCity.imageUrl"
+          name="imageUrl"
+        />
+      </div>
+    </form>
+
+    <button
+      type="submit"
+      class="badge badge-success mb-2"
+      (click)="updateCity()"
+    >
+      Update
+    </button>
+    <p>{{ message }}</p>
+  </div>
+
+  <div *ngIf="!currentCity.id">
+    <br />
+    <p>Cannot access this City...</p>
+  </div>
+</div>
