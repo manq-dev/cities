@@ -105,6 +105,6 @@ export class CityListComponent implements OnInit {
   }
 
   shortImageUrl(imageUrl: string): string {
-    return imageUrl.substring(0,15) + "..." + imageUrl.slice(-30);
+    return imageUrl.substring(0,15) + "..." + imageUrl.slice(-20);
   }
 }
