@@ -4,6 +4,7 @@
 
 * To run project run `./mvnw spring-boot:run`
 * Login:Password for Basic Auth `admin:admin`
+* Authentication for update in Angular is hardcoded
 
 ### Backlog
 
@@ -25,6 +26,7 @@
 - DONE Angular 
 - DONE browse through the paginated list of cities with the corresponding photos 
 - DONE search by name
-- authorization
-- edit the city
+- DONE edit the city
 - run it with little-to-zero effort
+- authentication
+- validation
