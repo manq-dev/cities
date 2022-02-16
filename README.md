@@ -2,9 +2,16 @@
 
 ### Building and running
 
+* In order to build and run backend you need Java 17 http://jdk.java.net/17
 * To run project run `./mvnw spring-boot:run`
 * Login:Password for Basic Auth `admin:admin`
+* Backend will start at `http:localhost:8080/cities`
+
+* To run frontend you need Node.js https://nodejs.org/en/download
+* After installing run `npm install -g @angular/cli`
+* To run app run `ng serve --open`
 * Authentication for update in Angular is hardcoded
+* Frontend will start at `http:localhost:4200`
 
 ### Backlog
 
@@ -20,13 +27,14 @@
 - DONE GitHub
 - DONE validation
 - DONE validation tests
-- run it with little-to-zero effort
+- DONE run it with little-to-zero effort
 
 #### Frontend
 - DONE Angular 
 - DONE browse through the paginated list of cities with the corresponding photos 
 - DONE search by name
 - DONE edit the city
-- run it with little-to-zero effort
+- DONE run it with little-to-zero effort
 - authentication
 - validation
+- Docker?
