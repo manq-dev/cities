@@ -7,6 +7,7 @@ import {AppComponent} from './app.component';
 import {CityListComponent} from './component/city-list/city-list.component';
 import {CityService} from './service/city.service';
 import {NgxPaginationModule} from 'ngx-pagination';
+import {AlertModule} from './component/alert';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    AlertModule
   ],
   providers: [CityService],
   bootstrap: [AppComponent]

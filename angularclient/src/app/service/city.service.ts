@@ -15,14 +15,25 @@ export class CityService {
     return this.http.get<any>(this.citiesUrl, { params });
   }
 
-  public update(id: any, data: any): Observable<any> {
-    return this.http.patch(`${this.citiesUrl}/${id}`, data, this.httpOptions);
+  public update(id: any, data: any, isAdmin: boolean): Observable<any> {
+    let httpOptions = this.httpOptionsForGuest;
+    if(isAdmin) {
+      httpOptions = this.httpOptionsForAdmin;
+    }
+    return this.http.patch(`${this.citiesUrl}/${id}`, data, httpOptions);
   }
 
-  httpOptions = {
+  httpOptionsForAdmin = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
       'Authorization': 'Basic ' + btoa('admin:admin')
+    })
+  };
+
+  httpOptionsForGuest = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Authorization': 'Basic ' + btoa('admin:badPassword')
     })
   };
 

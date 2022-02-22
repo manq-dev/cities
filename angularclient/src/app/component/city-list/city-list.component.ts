@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {City} from 'src/app/model/city';
 import {CityService} from 'src/app/service/city.service';
+import {AlertService} from 'src/app/component/alert/alert.service';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -22,6 +23,7 @@ export class CityListComponent implements OnInit {
   pageSizes = [5, 10, 20, 50, 100];
 
   constructor(private cityService: CityService,
+              private alertService: AlertService,
               private route: ActivatedRoute,
               private router: Router) { }
 
@@ -90,17 +92,22 @@ export class CityListComponent implements OnInit {
     this.getCities();
   }
 
-  updateCity(): void {
+  updateCity(isAdmin: boolean): void {
     this.message = '';
 
-    this.cityService.update(this.currentCity.id, this.currentCity)
+    this.cityService.update(this.currentCity.id, this.currentCity, isAdmin)
       .subscribe(
         response => {
           console.log(response);
-          this.message = response.message ? response.message : 'This city was updated successfully!';
+          this.alertService.success('City updated successfully!', {
+            autoClose: true
+          });
         },
         error => {
           console.log(error);
+          this.alertService.error('City is not updated!', {
+            autoClose: true
+          });
         });
   }
 

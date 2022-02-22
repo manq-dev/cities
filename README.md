@@ -41,7 +41,7 @@
 
 #### Review
 - DONE Running instruction update
-- Check roles in frontend
+- DONE Check roles in frontend
 - DONE remove @EqualsAndHashCode from @Entity
 - DONE remove if in controller
 - Components segregation in FE (CityList, City, Search)
