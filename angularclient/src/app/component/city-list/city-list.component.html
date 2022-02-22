@@ -94,11 +94,18 @@
         <button
           type="submit"
           class="badge badge-success mb-2"
-          (click)="updateCity()"
+          (click)="updateCity(true)"
         >
-          Update
+          Update (admin)
         </button>
-        <p>{{ message }}</p>
+        <button
+          type="submit"
+          class="badge badge-success mb-2"
+          (click)="updateCity(false)"
+        >
+          Update (bad credentials)
+        </button>
+        <alert></alert>
         <img src="{{ currentCity.imageUrl }}" alt="{{ currentCity.name}} image">
       </div>
 

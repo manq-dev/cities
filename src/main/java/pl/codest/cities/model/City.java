@@ -10,7 +10,6 @@ import javax.persistence.Id;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class City {

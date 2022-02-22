@@ -32,12 +32,12 @@ import static pl.codest.cities.service.CityService.CITY_NOT_FOUND_MESSAGE;
 @TestInstance(Lifecycle.PER_CLASS)
 class CityControllerTest extends IntegrationTestContext {
 
-    private static final List<City> EXPECTED_CITIES = List.of(
-            City.builder().id(1).name("Tokyo").build(),
-            City.builder().id(2).name("Jakarta").build(),
-            City.builder().id(3).name("Delhi").build(),
-            City.builder().id(4).name("Mumbai").build(),
-            City.builder().id(5).name("Manila").build());
+    private static final List<CityWrapper> EXPECTED_CITIES = List.of(
+            CityWrapper.builder().id(1).name("Tokyo").build(),
+            CityWrapper.builder().id(2).name("Jakarta").build(),
+            CityWrapper.builder().id(3).name("Delhi").build(),
+            CityWrapper.builder().id(4).name("Mumbai").build(),
+            CityWrapper.builder().id(5).name("Manila").build());
 
     @BeforeAll
     public void setup() {
@@ -130,8 +130,6 @@ class CityControllerTest extends IntegrationTestContext {
     @Test
     public void shouldReturnCitiesSearchByName() throws Exception {
         //given:
-        int page = 0;
-        int size = 10;
         String searchPhrase = "oky";
 
         //when:
@@ -146,7 +144,7 @@ class CityControllerTest extends IntegrationTestContext {
 
         assertEquals(APPLICATION_JSON_VALUE,
                 mvcResult.getResponse().getContentType());
-        assertEquals(EXPECTED_CITIES.stream().filter(city -> city.getName().contains(searchPhrase)).toList(),
+        assertEquals(EXPECTED_CITIES.stream().filter(city -> city.name.contains(searchPhrase)).toList(),
                 prepareAssertableResultList(parsedResponse));
     }
 
@@ -170,7 +168,8 @@ class CityControllerTest extends IntegrationTestContext {
         //then:
         Optional<City> city = cityRepository.findById(id);
 
-        assertEquals(expectedCity, city.get());
+        assertEquals(expectedCity.getId(), city.get().getId());
+        assertEquals(expectedCity.getName(), city.get().getName());
     }
 
     @Test
@@ -276,11 +275,9 @@ class CityControllerTest extends IntegrationTestContext {
                 .getResponse().getContentAsByteArray(), new TypeReference<>() {});
     }
 
-    private List<City> prepareAssertableResultList(Page<City> parsedResponse) {
+    private List<CityWrapper> prepareAssertableResultList(Page<City> parsedResponse) {
         return parsedResponse.toList().stream()
-                             .map(
-                                     city -> City.builder().id(city.getId()).name(city.getName()).build())
-                             .toList();
+                             .map(CityWrapper::new).toList();
     }
 
     private String prepareRequestForUpdate(City expectedCity) throws JsonProcessingException {

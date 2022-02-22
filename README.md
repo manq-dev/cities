@@ -8,7 +8,7 @@
 * Backend will start at `http:localhost:8080/cities`
 
 * To run frontend you need Node.js https://nodejs.org/en/download
-* After installing run `npm install -g @angular/cli`
+* After installing run `npm install -g @angular/cli` and after that `npm install`
 * To run app run `ng serve --open` from `angularclient` catalog
 * Authentication for update in Angular is hardcoded
 * Frontend will start at `http:localhost:4200`
@@ -38,3 +38,11 @@
 - authentication
 - validation
 - Docker?
+
+#### Review
+- DONE Running instruction update
+- DONE Check roles in frontend
+- DONE remove @EqualsAndHashCode from @Entity
+- DONE remove if in controller
+- Components segregation in FE (CityList, City, Search)
+- Get rid of PageDeserializer
