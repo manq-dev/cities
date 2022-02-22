@@ -20,9 +20,9 @@ class CityServiceTest extends IntegrationTestContext {
         String tokyo = "Tokyo";
 
         // when:
-        Page<City> cityPage = cityService.findByName("oky", 0,5);
-        Page<City> cityPage1 = cityService.findByName("Tokyo", 0,5);
-        Page<City> cityPage2 = cityService.findByName("kyo", 0,5);
+        Page<City> cityPage = cityService.find("oky", 0,5);
+        Page<City> cityPage1 = cityService.find("Tokyo", 0,5);
+        Page<City> cityPage2 = cityService.find("kyo", 0,5);
 
         // then:
         assertEquals(1, cityPage.toList().size());

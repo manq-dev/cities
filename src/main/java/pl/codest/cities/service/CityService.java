@@ -21,22 +21,21 @@ public class CityService {
     private final CityRepository cityRepository;
     public static final String CITY_NOT_FOUND_MESSAGE = "City not found, id: ";
 
-    public Page<City> findAll(Integer page, Integer size) {
+    public Page<City> find(String name, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        return cityRepository.findAll(pageable);
-    }
-
-    public Page<City> findByName(String name, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return cityRepository.findByNameContainsIgnoreCase(name, pageable);
+        if(StringUtils.isBlank(name)) {
+            return cityRepository.findAll(pageable);
+        } else {
+            return cityRepository.findByNameContainsIgnoreCase(name, pageable);
+        }
     }
 
     @Transactional
     public UpdateCityResponse updateCity(UpdateCityCommand command) {
         return cityRepository
                 .findById(command.id())
-                .map(book -> {
-                    updateFields(command, book);
+                .map(city -> {
+                    updateFields(command, city);
                     return UpdateCityResponse.SUCCESS;
                 })
                 .orElseGet(() -> new UpdateCityResponse(

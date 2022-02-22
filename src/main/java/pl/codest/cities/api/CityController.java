@@ -1,7 +1,6 @@
 package pl.codest.cities.api;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +34,7 @@ public class CityController {
 
     static final String SIZE_VALIDATION_ERROR = "Size must be greater than 0";
     static final String PAGE_VALIDATION_ERROR = "Page must be greater or equal 0";
-    static final String ID_VALIDATION_ERROR = "Id must be greate or equal 0";
+    static final String ID_VALIDATION_ERROR = "Id must be greater or equal 0";
     static final String REQUEST_VALIDATION_ERROR = "One of two fields in request should be specified.";
 
     @GetMapping
@@ -44,10 +43,7 @@ public class CityController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) @PositiveOrZero(message = PAGE_VALIDATION_ERROR) Integer page,
             @RequestParam(required = false ,defaultValue = DEFAULT_LIST_SIZE) @Positive(message = SIZE_VALIDATION_ERROR) Integer size) {
-        if(StringUtils.isNotBlank(name)) {
-            return cityService.findByName(name, page, size);
-        }
-        return cityService.findAll(page, size);
+        return cityService.find(name, page, size);
     }
 
     @PatchMapping("/{id}")
