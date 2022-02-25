@@ -45,4 +45,4 @@
 - DONE remove @EqualsAndHashCode from @Entity
 - DONE remove if in controller
 - Components segregation in FE (CityList, City, Search)
-- Get rid of PageDeserializer
+- DONE Get rid of PageDeserializer

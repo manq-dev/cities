@@ -1,21 +1,23 @@
 package pl.codest.cities.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.data.domain.Page;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.codest.cities.IntegrationTestContext;
 import pl.codest.cities.model.City;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,7 @@ class CityControllerTest extends IntegrationTestContext {
             CityWrapper.builder().id(3).name("Delhi").build(),
             CityWrapper.builder().id(4).name("Mumbai").build(),
             CityWrapper.builder().id(5).name("Manila").build());
+    private static final String TOTAL_CITIES = "1000";
 
     @BeforeAll
     public void setup() {
@@ -50,7 +53,7 @@ class CityControllerTest extends IntegrationTestContext {
     //GET Tests
 
     @Test
-    public void shouldReturnCitiesWithoutRequestParams() throws Exception {
+    public void shouldReturnCities() throws Exception {
         //given:
         int page = 0;
         int size = 5;
@@ -61,15 +64,25 @@ class CityControllerTest extends IntegrationTestContext {
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['pageable']['paged']").value("true"))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['pageable']['pageSize']").value(String.valueOf(size)))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['pageable']['pageNumber']").value(String.valueOf(page)))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['totalElements']").value(TOTAL_CITIES))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$.content[*]").isArray())
                 .andReturn();
 
-        //then:
-        Page<City> parsedResponse = parseToCityPage(mvcResult);
+        List<CityWrapper> actualCityList = parseCitiesFrom(mvcResult);
 
+        //then:
         assertEquals(APPLICATION_JSON_VALUE,
                 mvcResult.getResponse().getContentType());
         assertEquals(EXPECTED_CITIES,
-                prepareAssertableResultList(parsedResponse));
+                actualCityList);
     }
 
     @Test
@@ -84,15 +97,25 @@ class CityControllerTest extends IntegrationTestContext {
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['pageable']['paged']").value("true"))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['pageable']['pageSize']").value(String.valueOf(size)))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['pageable']['pageNumber']").value(String.valueOf(page)))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$['totalElements']").value(TOTAL_CITIES))
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$.content[*]").isArray())
                 .andReturn();
 
         //then:
-        Page<City> parsedResponse = parseToCityPage(mvcResult);
+        List<CityWrapper> actualCityList = parseCitiesFrom(mvcResult);
 
         assertEquals(APPLICATION_JSON_VALUE,
                 mvcResult.getResponse().getContentType());
         assertEquals(List.of(EXPECTED_CITIES.get(2), EXPECTED_CITIES.get(3)),
-                prepareAssertableResultList(parsedResponse));
+                actualCityList);
     }
 
     @Test
@@ -137,15 +160,17 @@ class CityControllerTest extends IntegrationTestContext {
                 .perform(get(CITIES_MAPPING)
                         .param("name", searchPhrase))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$.content[*]").isArray())
                 .andReturn();
 
         //then:
-        Page<City> parsedResponse = parseToCityPage(mvcResult);
+        List<CityWrapper> actualCityList = parseCitiesFrom(mvcResult);
 
         assertEquals(APPLICATION_JSON_VALUE,
                 mvcResult.getResponse().getContentType());
         assertEquals(EXPECTED_CITIES.stream().filter(city -> city.name.contains(searchPhrase)).toList(),
-                prepareAssertableResultList(parsedResponse));
+                actualCityList);
     }
 
     //PATCH Tests
@@ -268,16 +293,20 @@ class CityControllerTest extends IntegrationTestContext {
                 .andExpect(status().isUnauthorized());
     }
 
-    private Page<City> parseToCityPage(MvcResult mvcResult) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new PageDeserializer.PageModule());
-        return objectMapper.readValue(mvcResult
-                .getResponse().getContentAsByteArray(), new TypeReference<>() {});
+    private List<CityWrapper> parseCitiesFrom(MvcResult mvcResult) throws UnsupportedEncodingException {
+        String jsonPathToContent = "$['content'][*]";
+        DocumentContext jsonContext = JsonPath.parse(mvcResult
+                .getResponse().getContentAsString());
+        List<LinkedHashMap> pagedContent = jsonContext.read(jsonPathToContent);
+        return prepareAssertableResultList(pagedContent);
     }
 
-    private List<CityWrapper> prepareAssertableResultList(Page<City> parsedResponse) {
-        return parsedResponse.toList().stream()
-                             .map(CityWrapper::new).toList();
+    private List<CityWrapper> prepareAssertableResultList(List<LinkedHashMap> parsedResponse) {
+        return parsedResponse.stream()
+                             .map(city -> CityWrapper.builder()
+                                                     .id((int)city.get("id"))
+                                                     .name((String)city.get("name"))
+                                                     .build()).toList();
     }
 
     private String prepareRequestForUpdate(City expectedCity) throws JsonProcessingException {
